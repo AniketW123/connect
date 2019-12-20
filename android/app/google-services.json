@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "458276895520",
+    "firebase_url": "https://connect-7ce1a.firebaseio.com",
+    "project_id": "connect-7ce1a",
+    "storage_bucket": "connect-7ce1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458276895520:android:86f39521bff490ad1c3545",
+        "android_client_info": {
+          "package_name": "com.aniketwarty.connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458276895520-pcu18shpo1npk41eab41f6jrn145r10r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDerSAAhmYL_h69hnZZv6w1LMm9VQivo-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458276895520-pcu18shpo1npk41eab41f6jrn145r10r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
