@@ -19,7 +19,6 @@ class AdminPassword extends StatelessWidget {
       );
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

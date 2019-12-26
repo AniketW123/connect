@@ -4,36 +4,8 @@ import 'log_in.dart';
 import 'main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-bool loggedIn;
+bool loggedIn = false;
 final _auth = FirebaseAuth.instance;
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-class _MyAppState extends State<MyApp> {
-  void initState() {
-    super.initState();
-    try{
-      final user = _auth.currentUser();
-      if (user != null) {
-        loggedIn = true;
-      }
-      else{
-        loggedIn = false;
-      }
-    }
-    catch(e){
-      print(e);
-    }
-  }
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: loggedIn ? Connect():Startup(),
-    );
-  }
-}
 
 class Startup extends StatelessWidget {
   @override
