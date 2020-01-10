@@ -17,7 +17,7 @@ class _RegisterState extends State<Register> {
   wrongAccount(BuildContext context,){
     return showDialog(context: context, builder: (context){
       return AlertDialog(
-        content: Text('You incorrectly entered your email or password. Please try again.'),
+        content: Text('You incorrectly entered your email or password. Please try again. Make sure your password is 6 characters or more.'),
         actions: <Widget>[
           MaterialButton(
             child: Text('OK'),
@@ -37,12 +37,13 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create account'),),
+      appBar: AppBar(backgroundColor:Colors.lightBlue[800],title: Text('Create account'),),
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: SafeArea(
             child: Column(
               children: <Widget>[
+                SizedBox(height: 25,),
                 Text('Email',style: TextStyle(fontSize: 25),),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 50),
@@ -79,7 +80,7 @@ class _RegisterState extends State<Register> {
                   padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 30),
                   child: Material(
                     elevation: 5.0,
-                    color: Colors.lightBlue,
+                    color: Colors.lightBlue[800],
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                         onPressed:(){

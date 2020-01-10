@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
-
-class SettingsRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Settings())
-        );
-      },
-      child: Text('Settings'),
-    );
-  }
-}
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -26,9 +11,12 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue[800],
         title: Text('Settings'),),
       body: SafeArea(
-        child: Container(),
+        child: SafeArea(
+          child: null,
+        )
       ),
     );
   }

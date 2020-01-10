@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'advanced_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:search_widget/search_widget.dart';
 import 'park.dart';
 import 'main.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Search extends StatefulWidget {
   @override
@@ -13,73 +15,150 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
 
-  Name selectedItem;
+  String selectedItem;
+  Position position;
 
+  bool nearby = false;
+  double parkDistance = 1;
+
+  void getCurrentLocation() async {
+    position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+  }
+  void findAvailableParks(){
+    int i = 0;
+    while(i < parkList.length){
+      if(parkList[i].address[0] >= position.latitude - (parkDistance/69.2) && parkList[i].address[0] <= position.latitude + (parkDistance/69.2)){
+        if (parkList[i].address[1] >= position.longitude - (parkDistance/69.2) && parkList[i].address[1] <= position.longitude + (parkDistance/69.2)) {
+          parkList[i].available = true;
+        }
+      }
+      i++;
+    }
+  }
+
+  void makeAllAvailable(){
+    int i = 0;
+    while(i < parkList.length){
+      parkList[i].available = true;
+      i++;
+    }
+  }
+  void initState(){
+    super.initState();
+    getCurrentLocation();
+    Timer(Duration(seconds: 1),() {findAvailableParks();});
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue[800],
         title: const Text('Search for parks'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: 10,
+      body: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Checkbox(
+                  value: nearby,
+                  onChanged: (value){
+                    setState(() {
+                      nearby = value;
+                      if (nearby == true) {
+                        findAvailableParks();
+                      }
+                      else{
+                        makeAllAvailable();
+                      }
+                    });
+                  }
+              ),
+              Text('Search for nearby parks?'),
+              SizedBox(width: 5,),
+              nearby ? Expanded(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 10,),
+                    Text('Distance',style: TextStyle(fontSize: 16),),
+                    Slider(
+                      divisions: 18,
+                      min: 0,
+                      max: 9,
+                      value: parkDistance,
+                      onChanged: (value){
+                        setState(() {
+                          parkDistance = value;
+                        });
+                      }
+                    ),
+                  ],
+                ),
+              ):SizedBox(),
+              nearby ? Column(
+                children: <Widget>[
+                  Text(' ',style: TextStyle(fontSize: 16),),
+                  Container(
+                    height: 30,
+                    width: 40,
+                    child: Text('$parkDistance mi.')
+                  ),
+                ],
+              ):SizedBox(),
+              SizedBox(width: 15,)
+            ],
+          ),
+          SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Column(
+              children: <Widget>[
+                SearchWidget<String>(
+                  dataList: parkNames,
+                  hideSearchBoxWhenItemSelected: false,
+                  listContainerHeight: MediaQuery.of(context).size.height / 3,
+                  queryBuilder: (query, list) {
+                    return list
+                        .where((item) => item
+                        .toLowerCase()
+                        .contains(query.toLowerCase()))
+                        .toList();
+                  },
+                  popupListItemBuilder: (item) {
+                    return PopupListItemWidget(item);
+                  },
+                  selectedItemBuilder: (selectedItem, deleteSelectedItem) {
+                    return SelectedItemWidget(selectedItem, deleteSelectedItem);
+                  },
+                  // widget customization
+                  textFieldBuilder: (controller, focusNode) {
+                    return MyTextField(controller, focusNode);
+                  },
+                  onItemSelected: (item) {
+                    setState(() {
+                      parkNum = findParkWithTitle(item);
+                      currentPark = parkList[parkNum];
+                      Navigator.push(context,MaterialPageRoute(builder: (context) => Connect()));
+                    });
+                  },
+                ),
+                GestureDetector(
+                  onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context) => AdvancedSearch()));
+                  },
+                  child: Text('Advanced search', style: TextStyle(color:Colors.lightBlue[800],decoration: TextDecoration.underline),),
+                )
+              ],
             ),
-            SearchWidget<Name>(
-              dataList: parkNames,
-              hideSearchBoxWhenItemSelected: false,
-              listContainerHeight: MediaQuery.of(context).size.height / 4,
-              queryBuilder: (query, list) {
-                return list
-                    .where((item) => item.username
-                    .toLowerCase()
-                    .contains(query.toLowerCase()))
-                    .toList();
-              },
-              popupListItemBuilder: (item) {
-                return PopupListItemWidget(item);
-              },
-              selectedItemBuilder: (selectedItem, deleteSelectedItem) {
-                return SelectedItemWidget(selectedItem, deleteSelectedItem);
-              },
-              // widget customization
-              textFieldBuilder: (controller, focusNode) {
-                return MyTextField(controller, focusNode);
-              },
-              onItemSelected: (item) {
-                setState(() {
-                  parkNum = findParkWithTitle(item.username);
-                  currentPark = parkList[parkNum];
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => Connect()));
-                  selectedItem = item;
-                });
-              },
-            ),
-            GestureDetector(
-                onTap: (){
-                  Navigator.push(context,MaterialPageRoute(builder: (context) => AdvancedSearch()));
-                },
-                child: Text('Advanced search',style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),)
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class Name {
-  Name(this.username);
-  final String username;
-}
-
 class SelectedItemWidget extends StatelessWidget {
   const SelectedItemWidget(this.selectedItem, this.deleteSelectedItem);
 
-  final Name selectedItem;
+  final String selectedItem;
   final VoidCallback deleteSelectedItem;
 
   @override
@@ -100,7 +179,7 @@ class SelectedItemWidget extends StatelessWidget {
                 bottom: 12,
               ),
               child: Text(
-                selectedItem.username,
+                selectedItem,
                 style: const TextStyle(fontSize: 16),
               ),
             ),
@@ -136,7 +215,7 @@ class MyTextField extends StatelessWidget {
           ),
           suffixIcon: Icon(Icons.search),
           border: InputBorder.none,
-          hintText: 'Search here...',
+          hintText: 'Search for parks here ...',
           contentPadding: const EdgeInsets.only(
             left: 16,
             right: 20,
@@ -152,14 +231,14 @@ class MyTextField extends StatelessWidget {
 class PopupListItemWidget extends StatelessWidget {
   const PopupListItemWidget(this.item);
 
-  final Name item;
+  final String item;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
       child: Text(
-        item.username,
+        item,
         style: const TextStyle(fontSize: 16),
       ),
     );

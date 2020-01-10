@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'add_activities.dart';
 import 'park.dart';
 import 'activities.dart';
 
 String activity = '';
-final controller1 = TextEditingController();
-final controller2 = TextEditingController();
+final addController1 = TextEditingController();
+final addController2 = TextEditingController();
 String whichActBox;
 
-class AdvancedSearch extends StatefulWidget {
+class AddPark extends StatefulWidget {
   @override
-  _AdvancedSearchState createState() => _AdvancedSearchState();
+  _AddParkState createState() => _AddParkState();
 }
 
-class _AdvancedSearchState extends State<AdvancedSearch> {
+class _AddParkState extends State<AddPark> {
 
   void initState(){
     super.initState();
@@ -49,10 +50,20 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.lightBlue[800],title: Text('Advanced Search'),),
+      appBar: AppBar(backgroundColor: Colors.lightBlue[800],title: Text('Add Park'),),
       body: SafeArea(
         child: Column(
           children: <Widget>[
+            SizedBox(height: 25,),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+              child: TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Name or park',
+                ),
+              ),
+            ),
             SizedBox(height: 25,),
             Column(
               children: <Widget>[
@@ -74,7 +85,7 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                         checkWithText(val: 'senior', text: 'Senior      '),
                       ],
                     ),
-                ],),
+                  ],),
                 SizedBox(height: 20,),
                 Text('Main Supported Activities', style: TextStyle(fontSize: 23),),
                 Row(
@@ -84,12 +95,12 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                         padding: const EdgeInsets.only(top:10.0, left: 30),
                         child: TextField(
                           enableInteractiveSelection: false,
-                          controller: controller1,
+                          controller: addController1,
                           onTap: (){
                             setState(() {
                               whichActBox = '1';
                             });
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Activities()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddActivities()));
                           },
                           onChanged:(text){
                           },
@@ -106,12 +117,12 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
                         padding: const EdgeInsets.only(top:10.0, right: 30),
                         child: TextField(
                           enableInteractiveSelection: false,
-                          controller: controller2,
+                          controller: addController2,
                           onTap: (){
                             setState(() {
                               whichActBox = '2';
                             });
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Activities()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => AddActivities()));
                           },
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -150,11 +161,11 @@ class _AdvancedSearchState extends State<AdvancedSearch> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 RaisedButton(
-                  color: Colors.lightBlue[800],
-                  child: Text('Apply filters'),
-                  onPressed: (){
-                    Navigator.pop(context);
-                  }
+                    color: Colors.lightBlue[800],
+                    child: Text('Add park'),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    }
                 ),
                 SizedBox(height: 30,)
               ],

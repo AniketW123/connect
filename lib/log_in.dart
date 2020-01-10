@@ -21,7 +21,9 @@ class _LogInState extends State<LogIn> {
             child: Text('OK'),
             elevation: 5.0,
             onPressed: (){
-              showSpinner = false;
+              setState(() {
+                showSpinner = false;
+              });
               Navigator.of(context).pop();
             },
           )
@@ -37,6 +39,7 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.lightBlue[800],
         title: Text('Log in'),
       ),
       body: ModalProgressHUD(
@@ -45,6 +48,7 @@ class _LogInState extends State<LogIn> {
           child: Center(
             child: Column(
               children: <Widget>[
+                SizedBox(height: 20,),
                 Text('Email',style: TextStyle(fontSize: 25),),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 50),
@@ -81,7 +85,7 @@ class _LogInState extends State<LogIn> {
                   padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 30),
                   child: Material(
                     elevation: 5.0,
-                    color: Colors.lightBlue,
+                    color: Colors.lightBlue[800],
                     borderRadius: BorderRadius.circular(30.0),
                     child: MaterialButton(
                         onPressed:(){
